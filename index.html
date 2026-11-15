@@ -3,17 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>주류 후면 정보표시 라벨 생성기 (PNG 출력)</title>
+  <title>주류 후면 정보표시 라벨 생성기 (300 DPI PNG 출력)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Noto Sans KR & Noto Serif KR -->
+
+  <!-- 웹폰트 CDN 연결: KoPubWorld돋움 / KoPubWorld바탕 / Pretendard / Noto Sans KR / Noto Serif KR -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/dotum.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/batang.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", sans-serif;
+    /* KoPubWorld 서체 패밀리명 호환 보장용 @font-face 선언 */
+    @font-face {
+      font-family: 'KoPubWorldDotum';
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Light.woff2') format('woff2');
     }
+    @font-face {
+      font-family: 'KoPubWorldDotum';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Medium.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'KoPubWorldDotum';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Medium.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'KoPubWorldDotum';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Bold.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'KoPubWorldBatang';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Medium.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'KoPubWorldBatang';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Bold.woff2') format('woff2');
+    }
+
+    body {
+      font-family: 'KoPubWorldDotum', 'KoPubWorld Dotum', 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", sans-serif;
+    }
+
     /* 투명 배경 확인용 체크보드 패턴 */
     .checkerboard {
       background-color: #f8fafc;
@@ -25,6 +77,7 @@
       background-size: 20px 20px;
       background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     }
+
     /* 커스텀 스크롤바 */
     ::-webkit-scrollbar {
       width: 8px;
@@ -52,11 +105,16 @@
           酒
         </div>
         <div>
-          <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
-            수제 전통주·가양주 후면 정보표시 생성기
-          </h1>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
+              수제 전통주·가양주 후면 정보표시 생성기
+            </h1>
+            <span class="hidden md:inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-100 text-amber-800">
+              300 DPI 인쇄 대응
+            </span>
+          </div>
           <p class="text-xs text-slate-500 hidden sm:block">
-            항목 입력 및 하단 경고 문구 선택 후 고해상도 .PNG 이미지로 즉시 저장하세요
+            KoPubWorld돋움 지원 · 300 DPI 메타데이터 내장 고해상도 투명/흰색 .PNG 출력
           </p>
         </div>
       </div>
@@ -108,7 +166,7 @@
               <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 text-xs flex items-center justify-center font-bold">1</span>
               <span>주류 정보표시 항목 입력</span>
             </h2>
-            <span class="text-xs text-slate-400">빈칸으로 두면 표에서도 공란 처리됩니다</span>
+            <span class="text-xs text-slate-400">표시 체크 해제 시 해당 행/칸이 깔끔하게 생략됩니다</span>
           </div>
 
           <!-- 1행: 제품명 / 내용량 -->
@@ -153,9 +211,9 @@
                 <label for="inpReportNo" class="block text-xs font-semibold text-slate-700">
                   [품목보고번호]
                 </label>
-                <label class="inline-flex items-center gap-1 text-[11px] text-slate-500 cursor-pointer">
+                <label class="inline-flex items-center gap-1 text-[11px] text-slate-600 font-medium cursor-pointer">
                   <input id="chkShowReportNo" type="checkbox" checked class="rounded text-amber-600 focus:ring-amber-500" />
-                  <span>항목 표시</span>
+                  <span>표시</span>
                 </label>
               </div>
               <input id="inpReportNo" type="text" value="202611215541" placeholder="예: 202611215541"
@@ -188,13 +246,13 @@
                   <button type="button" onclick="fillTodayDate()" class="text-[11px] text-amber-700 hover:underline font-medium">
                     오늘 날짜
                   </button>
-                  <label class="inline-flex items-center gap-1 text-[11px] text-slate-500 cursor-pointer">
+                  <label class="inline-flex items-center gap-1 text-[11px] text-slate-600 font-medium cursor-pointer">
                     <input id="chkShowBottlingDate" type="checkbox" checked class="rounded text-amber-600 focus:ring-amber-500" />
                     <span>표시</span>
                   </label>
                 </div>
               </div>
-              <input id="inpBottlingDate" type="text" value="2026.11.19" placeholder="예: 2026.11.19 (비워두면 생략 가능)"
+              <input id="inpBottlingDate" type="text" value="2026.11.19" placeholder="비워두면 알코올 칸이 3칸 병합됩니다"
                 class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
             </div>
           </div>
@@ -203,7 +261,7 @@
           <div>
             <div class="flex items-center justify-between mb-1">
               <label for="inpManufacturer" class="block text-xs font-semibold text-slate-700">
-                [제조자] <span class="font-normal text-slate-400 ml-1">(엔터로 줄바꿈 시 2번째 줄은 자동으로 폭이 맞춰집니다)</span>
+                [제조자] <span class="font-normal text-slate-400 ml-1">(엔터로 줄바꿈 시 긴 문장은 자동으로 장평이 조절됩니다)</span>
               </label>
             </div>
             <textarea id="inpManufacturer" rows="2" placeholder="예: 한국가양주연구소 정규반 55기 4조&#10;(김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)"
@@ -211,11 +269,17 @@
 (김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)</textarea>
           </div>
 
-          <!-- 5행: 주소 -->
+          <!-- 5행: 주소 (표시 여부 체크박스 포함) -->
           <div>
-            <label for="inpAddress" class="block text-xs font-semibold text-slate-700 mb-1">
-              [주소]
-            </label>
+            <div class="flex items-center justify-between mb-1">
+              <label for="inpAddress" class="block text-xs font-semibold text-slate-700">
+                [주소]
+              </label>
+              <label class="inline-flex items-center gap-1.5 text-xs text-slate-600 font-medium cursor-pointer select-none">
+                <input id="chkShowAddress" type="checkbox" checked class="w-3.5 h-3.5 rounded text-amber-600 focus:ring-amber-500" />
+                <span>표시</span>
+              </label>
+            </div>
             <input id="inpAddress" type="text" value="서울 서초구 방배동 985-2" placeholder="예: 서울 서초구 방배동 985-2"
               class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
           </div>
@@ -223,7 +287,7 @@
           <!-- 6행: 원재료명 및 함량 -->
           <div>
             <label for="inpIngredients" class="block text-xs font-semibold text-slate-700 mb-1">
-              [원재료명및함량]
+              [원재료명 및 함량]
             </label>
             <input id="inpIngredients" type="text" value="정제수, 찹쌀, 멥쌀, 누룩(향미주곡)" placeholder="예: 정제수, 찹쌀, 멥쌀, 누룩(향미주곡)"
               class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
@@ -269,33 +333,69 @@
             </label>
           </div>
 
-          <!-- 경고 문구 직접 편집 영역 -->
-          <div id="warningTextContainer" class="pt-1">
-            <div class="flex items-center justify-between mb-1">
-              <label for="inpWarningText" class="block text-xs font-semibold text-slate-600">
-                '※ 경고 : ' 상세 문구 편집 <span class="font-normal text-slate-400">(줄바꿈 기준 그대로 출력됩니다)</span>
+          <!-- 상세 문구 직접 편집 영역 (글자수 맞춤 자동 크기 + 수동 미세조정) -->
+          <div id="warningTextContainer" class="pt-1 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label for="inpWarningText" class="block text-xs font-semibold text-slate-700">
+                상세 문구 편집 <span class="font-normal text-slate-400">(줄바꿈 기준 그대로 출력됩니다)</span>
               </label>
-              <button type="button" onclick="resetWarningText()" class="text-[11px] text-slate-500 hover:text-amber-700 underline">
-                기본 문구 복원
-              </button>
+              <div class="flex items-center gap-2.5">
+                <span id="lblWarnStats" class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-mono text-[11px]">
+                  82자 · 3줄 · 28px
+                </span>
+                <button type="button" onclick="resetWarningText()" class="text-[11px] text-slate-500 hover:text-amber-700 underline">
+                  기본 문구 복원
+                </button>
+              </div>
             </div>
+
             <textarea id="inpWarningText" rows="3"
               class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs leading-relaxed text-slate-700 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition">※ 경고 : 지나친 음주는 간경화나 간암을 일으키며 운전이나
 작업중 사고 발생률을 높입니다. 임신 중 음주는 기형아 출산을
 높입니다. 부정·불량 식품 신고는 국번없이 1339</textarea>
+
+            <!-- 글자수 맞춤 자동 크기 체크박스 및 수동 크기 미세조정 슬라이더 -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200/80">
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                <input id="chkAutoWarnSize" type="checkbox" checked class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                <span>글자수 맞춤 자동 크기</span>
+              </label>
+
+              <div class="flex items-center gap-2.5 flex-1 sm:max-w-xs">
+                <label for="rngWarnFontScale" class="text-[11px] font-medium text-slate-600 whitespace-nowrap">
+                  크기 미세조정
+                </label>
+                <input id="rngWarnFontScale" type="range" min="70" max="135" step="5" value="100" class="w-full accent-amber-600 cursor-pointer" />
+                <span id="lblWarnScaleVal" class="text-[11px] font-bold text-amber-700 font-mono w-10 text-right">100%</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- 3. 배경 및 스타일 세부 설정 카드 -->
+        <!-- 3. 서체, 300 DPI 인쇄 규격 및 PNG 배경 스타일 설정 카드 -->
         <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
               <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 text-xs flex items-center justify-center font-bold">3</span>
-              <span>PNG 배경 및 표 스타일 설정</span>
+              <span>글꼴(서체) · 300 DPI 인쇄 규격 · 배경 설정</span>
             </h2>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- 서체 선택 (KoPubWorld돋움 기본 추천) -->
+            <div>
+              <label for="selFontFamily" class="block text-xs font-semibold text-slate-700 mb-1">
+                글꼴(서체) 스타일
+              </label>
+              <select id="selFontFamily" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-amber-500 outline-none">
+                <option value="kopub-dotum" selected>KoPubWorld돋움 (기본 추천)</option>
+                <option value="noto-sans">본고딕 (Noto Sans KR)</option>
+                <option value="pretendard">프리텐다드 (Pretendard)</option>
+                <option value="kopub-batang">KoPubWorld바탕 (명조)</option>
+                <option value="malgun">시스템 고딕 (맑은 고딕)</option>
+              </select>
+            </div>
+
             <!-- 배경 모드 -->
             <div>
               <label for="selBgMode" class="block text-xs font-semibold text-slate-700 mb-1">
@@ -309,15 +409,19 @@
               </select>
             </div>
 
-            <!-- 서체 선택 -->
+            <!-- 300 DPI 기준 라벨 인쇄 가로 폭 (mm) -->
             <div>
-              <label for="selFontFamily" class="block text-xs font-semibold text-slate-700 mb-1">
-                글꼴(서체) 스타일
+              <label for="inpPrintWidthMm" class="block text-xs font-semibold text-slate-700 mb-1 flex justify-between">
+                <span>인쇄 가로 폭 (300 DPI 기준)</span>
+                <span id="lblPrintSizeSummary" class="text-amber-700 font-bold">65.0 × 44.6 mm</span>
               </label>
-              <select id="selFontFamily" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-amber-500 outline-none">
-                <option value="sans" selected>고딕체 (본고딕 / 원본 이미지와 동일)</option>
-                <option value="serif">명조체 (전통 한지 라벨 감성)</option>
-              </select>
+              <div class="flex items-center gap-2">
+                <input id="rngPrintWidthMm" type="range" min="35" max="140" step="1" value="65" class="flex-1 accent-amber-600 cursor-pointer" />
+                <div class="flex items-center border border-slate-300 rounded-lg bg-white px-2 py-1 w-20">
+                  <input id="inpPrintWidthMm" type="number" min="20" max="300" step="1" value="65" class="w-full text-xs font-bold text-right outline-none" />
+                  <span class="text-[11px] text-slate-400 ml-1">mm</span>
+                </div>
+              </div>
             </div>
 
             <!-- 바깥 여백 설정 -->
@@ -326,20 +430,20 @@
                 <span>표 바깥 여백 (Padding)</span>
                 <span id="lblPaddingVal" class="text-amber-700 font-bold">16px</span>
               </label>
-              <input id="rngPadding" type="range" min="0" max="80" step="4" value="16" class="w-full accent-amber-600 cursor-pointer" />
+              <input id="rngPadding" type="range" min="0" max="80" step="4" value="16" class="w-full accent-amber-600 cursor-pointer mt-1.5" />
             </div>
 
             <!-- 글자 및 테두리 색상 -->
-            <div>
+            <div class="sm:col-span-2">
               <label for="inpColor" class="block text-xs font-semibold text-slate-700 mb-1 flex justify-between">
                 <span>표 선 & 글자 색상</span>
                 <span id="lblColorVal" class="text-slate-500 font-mono text-xs">#3A3A3A</span>
               </label>
-              <div class="flex items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2">
                 <input id="inpColor" type="color" value="#3a3a3a" class="h-9 w-14 rounded-lg border border-slate-300 cursor-pointer p-0.5 bg-white" />
-                <button type="button" onclick="setInkColor('#3a3a3a')" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100">차콜(원본)</button>
-                <button type="button" onclick="setInkColor('#000000')" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100">완전검정</button>
-                <button type="button" onclick="setInkColor('#ffffff')" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-800 text-white hover:bg-slate-700">흰색(어두운병용)</button>
+                <button type="button" onclick="setInkColor('#3a3a3a')" class="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 font-medium">차콜(원본)</button>
+                <button type="button" onclick="setInkColor('#000000')" class="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 font-medium">완전검정</button>
+                <button type="button" onclick="setInkColor('#ffffff')" class="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-800 text-white hover:bg-slate-700 font-medium">흰색(어두운병용)</button>
               </div>
             </div>
           </div>
@@ -347,16 +451,18 @@
 
       </section>
 
-      <!-- 우측: 실시간 미리보기 및 PNG 다운로드 패널 (5칼럼, Sticky) -->
+      <!-- 우측: 실시간 미리보기 및 300 DPI PNG 다운로드 패널 (5칼럼, Sticky) -->
       <aside class="lg:col-span-5 lg:sticky lg:top-22 space-y-4">
         <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center justify-between">
+          <div class="flex items-start justify-between gap-2">
             <div>
               <h2 class="text-base font-bold text-slate-900">실시간 라벨 미리보기</h2>
-              <p class="text-xs text-slate-500">아래 화면과 100% 동일한 고해상도 PNG로 저장됩니다</p>
+              <p id="lblResolutionDetail" class="text-xs text-slate-500 mt-0.5">
+                출력: 3100 × 2128 px · 인쇄: 65.0 × 44.6 mm
+              </p>
             </div>
-            <span id="badgeResolution" class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              고해상도 인쇄용
+            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
+              300 DPI 인쇄용 출력
             </span>
           </div>
 
@@ -366,8 +472,9 @@
           </div>
 
           <!-- 안내 팁 -->
-          <div class="text-xs text-slate-500 bg-slate-50 rounded-xl p-3 border border-slate-200/80 leading-relaxed">
-            💡 <strong>체크무늬 배경 안내:</strong> 체크무늬는 <strong>투명한 영역</strong>을 뜻합니다. 다운로드한 PNG 파일을 미리캔버스, 포토샵, 파워포인트, 한글 등에 불러오면 표 선과 글자만 깔끔하게 올라갑니다.
+          <div class="text-xs text-slate-500 bg-slate-50 rounded-xl p-3 border border-slate-200/80 leading-relaxed space-y-1">
+            <div>💡 <strong>300 DPI 인쇄 메타데이터 내장:</strong> 저장되는 PNG 파일 내부에 <code>pHYs (11811 ppm = 300 DPI)</code> 청크가 직접 기록되어 포토샵·일러스트레이터·인쇄소 프로그램에서 실제 인쇄 크기(mm)와 300 DPI로 즉시 인식됩니다.</div>
+            <div>🎨 <strong>체크무늬 배경 안내:</strong> 체크무늬는 <strong>투명 영역(누끼)</strong>을 의미합니다.</div>
           </div>
 
           <!-- 액션 버튼 모음 -->
@@ -377,7 +484,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
               </svg>
-              <span>.PNG 이미지로 다운로드</span>
+              <span>300 DPI .PNG 이미지로 다운로드</span>
             </button>
 
             <button id="btnCopyClipboard" type="button"
@@ -397,12 +504,12 @@
     </div>
   </main>
 
-  <!-- GitHub 업로드 & 배포 가이드 모달 -->
+  <!-- GitHub 업로드 & index.html 덮어쓰기 가이드 모달 -->
   <div id="githubModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 space-y-5">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <span>🚀 GitHub에 업로드하여 나만의 라벨 웹페이지 만들기</span>
+          <span>🚀 GitHub에 업로드 및 index.html 업데이트 방법</span>
         </h3>
         <button id="btnCloseModal" type="button" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -413,36 +520,24 @@
 
       <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
         <p class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-3.5 text-xs sm:text-sm">
-          이 웹페이지는 별도의 서버나 복잡한 설치 없이 <strong>단 하나의 파일(<code>index.html</code>)</strong>로 모든 기능이 작동하도록 제작되었습니다. 아래 순서대로 GitHub에 올리시면 무료 웹 주소(URL)가 생성되어 스마트폰이나 PC 어디서든 접속해 라벨을 뽑으실 수 있습니다!
+          이 웹페이지는 별도의 서버나 라이브러리 설치 없이 <strong>단 하나의 파일(<code>index.html</code>)</strong>로 작동합니다. 이미 GitHub 저장소를 만드신 경우 기존 <code>index.html</code> 파일에 덮어쓰기만 하시면 즉시 새 버전이 반영됩니다!
         </p>
 
         <ol class="space-y-3 list-decimal list-inside font-medium text-slate-800">
           <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <strong>코드 저장하기:</strong>
+            <strong>새로 GitHub에 올릴 때:</strong>
             <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
-              현재 코드 편집기의 내용을 복사하거나 다운로드하여 내 컴퓨터에 <code>index.html</code>이라는 이름으로 저장합니다.
+              ① 현재 코드를 내 컴퓨터에 <code>index.html</code> 이름으로 저장합니다.<br/>
+              ② <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-amber-700 underline font-semibold">github.com</a>에서 <strong>Public</strong> 저장소를 생성하고 <code>index.html</code>을 업로드합니다.<br/>
+              ③ <strong>[Settings] → [Pages]</strong>에서 Branch를 <code>main</code>으로 선택하고 <strong>[Save]</strong>를 누릅니다.
             </p>
           </li>
           <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <strong>GitHub 새 저장소(Repository) 만들기:</strong>
+            <strong>기존 GitHub 저장소의 <code>index.html</code> 덮어쓰기(업데이트):</strong>
             <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-amber-700 underline font-semibold">github.com</a>에 로그인한 뒤 우측 상단 <strong>[+] → [New repository]</strong>를 클릭합니다.<br/>
-              • Repository name: 예) <code>sool-label</code> 입력<br/>
-              • <strong>Public</strong> 선택 후 하단 초록색 <strong>[Create repository]</strong> 버튼 클릭!
-            </p>
-          </li>
-          <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <strong><code>index.html</code> 파일 업로드:</strong>
-            <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
-              생성된 화면에서 <strong>"uploading an existing file"</strong> 링크를 클릭하고, 저장해둔 <code>index.html</code> 파일을 마우스로 끌어다 놓은 뒤 하단의 초록색 <strong>[Commit changes]</strong> 버튼을 누릅니다.
-            </p>
-          </li>
-          <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <strong>GitHub Pages(무료 웹 호스팅) 켜기:</strong>
-            <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
-              저장소 상단 메뉴의 <strong>[Settings]</strong> → 좌측 메뉴의 <strong>[Pages]</strong>로 이동합니다.<br/>
-              • <strong>Branch</strong> 항목에서 <code>None</code>을 <code>main</code>으로 바꾸고 <strong>[Save]</strong>를 클릭합니다.<br/>
-              • 약 1분 뒤 페이지 상단에 <code>https://내아이디.github.io/sool-label/</code> 주소가 나타나며, 조원분들과 링크를 공유해 언제든 사용하실 수 있습니다!
+              ① GitHub 저장소에서 기존 <strong><code>index.html</code></strong> 파일을 클릭하고 우측 상단 <strong>연필 아이콘(Edit this file)</strong>을 누릅니다.<br/>
+              ② 기존 내용을 전체 선택(<code>Ctrl+A</code>) 후 삭제하고, 업그레이드된 새 코드 전체를 붙여넣기(<code>Ctrl+V</code>) 합니다.<br/>
+              ③ 우측 상단 초록색 <strong>[Commit changes...]</strong>를 누르면 1~2분 내로 GitHub Pages 웹사이트가 자동 업데이트됩니다. (반영 후 <code>Ctrl+Shift+R</code>로 강력 새로고침!)
             </p>
           </li>
         </ol>
@@ -472,9 +567,10 @@
         reportNo: '202611215541',
         alcohol: '17.3%',
         dateHeader: '병입일',
-        showBottlingDate: false, // 원본 이미지처럼 비워두거나 체크하면 바로 표시
-        bottlingDate: '2026.11.19',
+        showBottlingDate: true,
+        bottlingDate: '', // 비워두면 원본 《해사》 이미지처럼 알코올 칸이 3칸 병합됨
         manufacturer: '한국가양주연구소 정규반 55기 4조\n(김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)',
+        showAddress: true,
         address: '서울 서초구 방배동 985-2',
         ingredients: '정제수, 찹쌀, 멥쌀, 누룩(향미주곡)',
         chkWarning: true,
@@ -493,6 +589,7 @@
         showBottlingDate: true,
         bottlingDate: '2026.11.19',
         manufacturer: '한국가양주연구소 정규반 55기 4조\n(김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)',
+        showAddress: true,
         address: '서울 서초구 방배동 985-2',
         ingredients: '정제수, 찹쌀, 멥쌀, 구기자, 누룩(향미주곡)',
         chkWarning: true,
@@ -511,6 +608,7 @@
         showBottlingDate: true,
         bottlingDate: '2026.11.24',
         manufacturer: '김호균',
+        showAddress: false,
         address: '서울 서초구 방배동 985-2',
         ingredients: '정제수, 찹쌀(국내산), 자색고구마, 밤고구마, 전통누룩',
         chkWarning: true,
@@ -529,11 +627,36 @@
         showBottlingDate: true,
         bottlingDate: '',
         manufacturer: '',
+        showAddress: true,
         address: '',
         ingredients: '',
         chkWarning: true,
         chkUnder19: true,
         chkNotForSale: true
+      }
+    };
+
+    // 서체 매핑 정의
+    const FONT_CONFIG = {
+      'kopub-dotum': {
+        stack: '"KoPubWorldDotum", "KoPubWorld Dotum", "Noto Sans KR", "Malgun Gothic", sans-serif',
+        loadName: 'KoPubWorldDotum'
+      },
+      'noto-sans': {
+        stack: '"Noto Sans KR", "Malgun Gothic", "맑은 고딕", sans-serif',
+        loadName: 'Noto Sans KR'
+      },
+      'pretendard': {
+        stack: '"Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif',
+        loadName: 'Pretendard'
+      },
+      'kopub-batang': {
+        stack: '"KoPubWorldBatang", "KoPubWorld Batang", "Noto Serif KR", "Batang", serif',
+        loadName: 'KoPubWorldBatang'
+      },
+      'malgun': {
+        stack: '"Malgun Gothic", "맑은 고딕", AppleSDGothicNeo, sans-serif',
+        loadName: 'Malgun Gothic'
       }
     };
 
@@ -550,6 +673,7 @@
       chkShowBottlingDate: document.getElementById('chkShowBottlingDate'),
       inpBottlingDate: document.getElementById('inpBottlingDate'),
       inpManufacturer: document.getElementById('inpManufacturer'),
+      chkShowAddress: document.getElementById('chkShowAddress'),
       inpAddress: document.getElementById('inpAddress'),
       inpIngredients: document.getElementById('inpIngredients'),
       chkWarning: document.getElementById('chkWarning'),
@@ -557,8 +681,15 @@
       chkNotForSale: document.getElementById('chkNotForSale'),
       inpWarningText: document.getElementById('inpWarningText'),
       warningTextContainer: document.getElementById('warningTextContainer'),
+      chkAutoWarnSize: document.getElementById('chkAutoWarnSize'),
+      rngWarnFontScale: document.getElementById('rngWarnFontScale'),
+      lblWarnScaleVal: document.getElementById('lblWarnScaleVal'),
+      lblWarnStats: document.getElementById('lblWarnStats'),
       selBgMode: document.getElementById('selBgMode'),
       selFontFamily: document.getElementById('selFontFamily'),
+      rngPrintWidthMm: document.getElementById('rngPrintWidthMm'),
+      inpPrintWidthMm: document.getElementById('inpPrintWidthMm'),
+      lblPrintSizeSummary: document.getElementById('lblPrintSizeSummary'),
       rngPadding: document.getElementById('rngPadding'),
       lblPaddingVal: document.getElementById('lblPaddingVal'),
       inpColor: document.getElementById('inpColor'),
@@ -566,7 +697,7 @@
       canvas: document.getElementById('labelCanvas'),
       btnDownloadPng: document.getElementById('btnDownloadPng'),
       btnCopyClipboard: document.getElementById('btnCopyClipboard'),
-      badgeResolution: document.getElementById('badgeResolution'),
+      lblResolutionDetail: document.getElementById('lblResolutionDetail'),
       statusToast: document.getElementById('statusToast'),
       githubModal: document.getElementById('githubModal'),
       btnGithubGuide: document.getElementById('btnGithubGuide'),
@@ -574,7 +705,106 @@
       btnCloseModalBottom: document.getElementById('btnCloseModalBottom')
     };
 
-    // 토스트 메시지 표시 함수 (alert 대체)
+    // =========================================================================
+    // PNG 300 DPI 메타데이터 (pHYs 청크: 11811 pixels/meter) 바이너리 인코더
+    // =========================================================================
+    const CRC32_TABLE = (() => {
+      const table = new Uint32Array(256);
+      for (let n = 0; n < 256; n++) {
+        let c = n;
+        for (let k = 0; k < 8; k++) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[n] = c;
+      }
+      return table;
+    })();
+
+    function computeCrc32(bytes) {
+      let crc = 0xFFFFFFFF;
+      for (let i = 0; i < bytes.length; i++) {
+        crc = CRC32_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+      }
+      return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    /**
+     * PNG 바이너리(ArrayBuffer)의 IHDR 청크 바로 뒤에 표준 pHYs 청크(300 DPI = 11811 ppm)를 삽입합니다.
+     * @param {ArrayBuffer} buffer 원본 PNG ArrayBuffer
+     * @param {number} dpi 목표 DPI (기본 300)
+     * @returns {Blob} 300 DPI pHYs 청크가 포함된 PNG Blob
+     */
+    function injectPngDpiMetadata(buffer, dpi = 300) {
+      const src = new Uint8Array(buffer);
+      // PNG 시그니처 검증 (89 50 4E 47 0D 0A 1A 0A)
+      if (
+        src.length < 33 ||
+        src[0] !== 0x89 || src[1] !== 0x50 || src[2] !== 0x4E || src[3] !== 0x47 ||
+        src[4] !== 0x0D || src[5] !== 0x0A || src[6] !== 0x1A || src[7] !== 0x0A
+      ) {
+        return new Blob([src], { type: 'image/png' });
+      }
+
+      // 300 DPI -> pixels per meter (300 / 0.0254 = 11811.0236 -> 11811)
+      const ppm = Math.round(dpi / 0.0254);
+
+      // 21바이트 pHYs 청크 생성: Length(4) + Type(4) + Data(9) + CRC(4)
+      const physChunk = new Uint8Array(21);
+      const physView = new DataView(physChunk.buffer);
+      physView.setUint32(0, 9, false); // Data length = 9
+      // "pHYs"
+      physChunk[4] = 0x70;
+      physChunk[5] = 0x48;
+      physChunk[6] = 0x59;
+      physChunk[7] = 0x73;
+      physView.setUint32(8, ppm, false);  // X axis pixels/meter
+      physView.setUint32(12, ppm, false); // Y axis pixels/meter
+      physChunk[16] = 1;                  // Unit specifier: 1 = meter
+      const crc = computeCrc32(physChunk.subarray(4, 17));
+      physView.setUint32(17, crc, false);
+
+      // 청크 순회하며 IHDR 뒤에 pHYs 삽입 (기존 pHYs 청크가 있다면 교체)
+      const chunks = [src.subarray(0, 8)];
+      let offset = 8;
+      const srcView = new DataView(src.buffer, src.byteOffset, src.byteLength);
+
+      while (offset + 12 <= src.length) {
+        const length = srcView.getUint32(offset, false);
+        const totalChunkLen = 12 + length;
+        if (offset + totalChunkLen > src.length) break;
+
+        const type = String.fromCharCode(
+          src[offset + 4],
+          src[offset + 5],
+          src[offset + 6],
+          src[offset + 7]
+        );
+
+        if (type === 'IHDR') {
+          chunks.push(src.subarray(offset, offset + totalChunkLen));
+          chunks.push(physChunk);
+        } else if (type === 'pHYs') {
+          // 기존 pHYs 건너뜀
+        } else {
+          chunks.push(src.subarray(offset, offset + totalChunkLen));
+        }
+        offset += totalChunkLen;
+      }
+
+      const totalSize = chunks.reduce((acc, part) => acc + part.length, 0);
+      const merged = new Uint8Array(totalSize);
+      let writePos = 0;
+      for (const part of chunks) {
+        merged.set(part, writePos);
+        writePos += part.length;
+      }
+
+      return new Blob([merged], { type: 'image/png' });
+    }
+
+    // =========================================================================
+    // UI 헬퍼 함수
+    // =========================================================================
     let toastTimer = null;
     function showToast(message, type = 'success') {
       els.statusToast.textContent = message;
@@ -587,10 +817,9 @@
       if (toastTimer) clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         els.statusToast.classList.add('hidden');
-      }, 3500);
+      }, 3800);
     }
 
-    // 오늘 날짜 자동 입력
     function fillTodayDate() {
       const now = new Date();
       const yyyy = now.getFullYear();
@@ -601,20 +830,19 @@
       renderLabel();
     }
 
-    // 기본 경고 문구 복원
     function resetWarningText() {
       els.inpWarningText.value = DEFAULT_WARNING_TEXT;
+      els.chkAutoWarnSize.checked = true;
+      els.rngWarnFontScale.value = 100;
       renderLabel();
     }
 
-    // 색상 변경 헬퍼
     function setInkColor(hex) {
       els.inpColor.value = hex;
       els.lblColorVal.textContent = hex.toUpperCase();
       renderLabel();
     }
 
-    // 프리셋 적용 함수
     function applyPreset(key) {
       const p = PRESETS[key];
       if (!p) return;
@@ -629,6 +857,7 @@
       els.chkShowBottlingDate.checked = p.showBottlingDate;
       els.inpBottlingDate.value = p.bottlingDate;
       els.inpManufacturer.value = p.manufacturer;
+      els.chkShowAddress.checked = p.showAddress;
       els.inpAddress.value = p.address;
       els.inpIngredients.value = p.ingredients;
       els.chkWarning.checked = p.chkWarning;
@@ -638,14 +867,27 @@
     }
 
     /**
+     * 선택된 웹폰트가 캔버스 렌더링 전에 확실히 로드되도록 보장하는 함수
+     */
+    async function ensureSelectedFontLoaded() {
+      const fontKey = els.selFontFamily.value || 'kopub-dotum';
+      const cfg = FONT_CONFIG[fontKey] || FONT_CONFIG['kopub-dotum'];
+      try {
+        if (document.fonts && document.fonts.load) {
+          await Promise.all([
+            document.fonts.load(`400 39px "${cfg.loadName}"`),
+            document.fonts.load(`500 39px "${cfg.loadName}"`),
+            document.fonts.load(`700 39px "${cfg.loadName}"`)
+          ]);
+          await document.fonts.ready;
+        }
+      } catch (e) {
+        // 폰트 로드 실패 시 fallback 서체로 정상 진행
+      }
+    }
+
+    /**
      * 장평(가로 폭 축소)을 자동으로 계산하여 텍스트를 그리는 유틸리티 함수
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {string} text 출력할 문자열
-     * @param {number} x 기준 X 좌표
-     * @param {number} y 기준 Y 좌표 (middle baseline)
-     * @param {number} maxWidth 허용 최대 가로폭
-     * @param {string} align 'left' | 'center' | 'right'
-     * @param {number} defaultScaleX 기본 장평 비율 (예: 0.92)
      */
     function drawCondensedText(ctx, text, x, y, maxWidth, align = 'left', defaultScaleX = 0.95) {
       if (!text) return;
@@ -664,17 +906,77 @@
     }
 
     /**
-     * 메인 Canvas 렌더링 함수
-     * 업로드된 《해사》 정보표시 이미지의 비율과 타이포그래피를 고해상도로 구현합니다.
+     * 상세 문구의 전체 글자수, 줄 수, 가장 긴 줄의 길이 및 실측 픽셀 폭을 분석해
+     * 표 내부에서 넘치지 않는 최적의 글자 크기(px)를 계산하는 함수
      */
+    function calculateWarningFontSize(ctx, warningLines, fontStack, maxLinePixelWidth) {
+      const totalChars = warningLines.reduce((sum, line) => sum + line.length, 0);
+      const lineCount = warningLines.length;
+      const maxLineChars = lineCount > 0 ? Math.max(...warningLines.map(l => l.length)) : 0;
+
+      const isAuto = els.chkAutoWarnSize.checked;
+      const manualScale = (parseInt(els.rngWarnFontScale.value, 10) || 100) / 100;
+      els.lblWarnScaleVal.textContent = `${Math.round(manualScale * 100)}%`;
+
+      let baseSize = 28; // 표준 3줄 경고문 기준 크기
+
+      if (isAuto && lineCount > 0) {
+        // 1) 기준 28px일 때 가장 긴 줄의 실측 가로폭 계산
+        ctx.save();
+        ctx.font = `400 28px ${fontStack}`;
+        let widestPxAt28 = 0;
+        for (const line of warningLines) {
+          const w = ctx.measureText(line).width;
+          if (w > widestPxAt28) widestPxAt28 = w;
+        }
+        ctx.restore();
+
+        // 2) 가로폭 기준 자동 축소/확대 계수
+        if (widestPxAt28 > maxLinePixelWidth * 0.96) {
+          // 가장 긴 줄이 표 폭을 넘어가려 하면 비례 축소
+          baseSize = 28 * ((maxLinePixelWidth * 0.95) / widestPxAt28);
+        } else if (totalChars <= 45 && lineCount <= 2 && maxLineChars <= 24) {
+          // 짧은 문구(1~2줄)일 경우 가독성 좋게 약간 확대
+          baseSize = 33;
+        } else if (totalChars <= 65 && lineCount <= 2 && maxLineChars <= 30) {
+          baseSize = 30;
+        }
+
+        // 3) 줄 수 및 전체 글자수 밀도에 따른 세로 균형 보정
+        if (lineCount >= 4) {
+          const lineFactor = Math.pow(3 / lineCount, 0.32);
+          baseSize = Math.min(baseSize, 28 * lineFactor);
+        }
+        if (totalChars > 105) {
+          const charFactor = Math.sqrt(105 / totalChars);
+          baseSize = Math.min(baseSize, 28 * charFactor);
+        }
+
+        // 최소 15px ~ 최대 36px 범위 제한
+        baseSize = Math.max(15, Math.min(36, baseSize));
+      }
+
+      const finalSize = Math.max(12, Math.min(44, Math.round(baseSize * manualScale * 10) / 10));
+
+      // UI 통계 배지 업데이트
+      els.lblWarnStats.textContent = `${totalChars}자 · ${lineCount}줄 · ${finalSize}px`;
+
+      return finalSize;
+    }
+
+    // =========================================================================
+    // 메인 Canvas 렌더링 함수 (300 DPI 인쇄 해상도 기준)
+    // =========================================================================
     function renderLabel() {
       const ctx = els.canvas.getContext('2d');
 
-      // 경고 문구 입력창 활성/비활성 시각 처리
+      // 체크박스 상태에 따른 입력창 시각 피드백
       els.warningTextContainer.style.opacity = els.chkWarning.checked ? '1' : '0.45';
+      els.inpAddress.disabled = !els.chkShowAddress.checked;
+      els.inpAddress.classList.toggle('bg-slate-100', !els.chkShowAddress.checked);
+      els.inpAddress.classList.toggle('text-slate-400', !els.chkShowAddress.checked);
 
-      // 고해상도 배율 (2배수 = 가로 약 2000px 급 인쇄 품질)
-      const SCALE = 2;
+      // 논리 좌표계 기준 표 폭 (960) & 바깥 여백
       const TABLE_W = 960;
       const pad = parseInt(els.rngPadding.value, 10) || 0;
       els.lblPaddingVal.textContent = `${pad}px`;
@@ -682,9 +984,8 @@
       const inkColor = els.inpColor.value || '#3a3a3a';
       els.lblColorVal.textContent = inkColor.toUpperCase();
 
-      const fontStack = els.selFontFamily.value === 'serif'
-        ? '"Noto Serif KR", "Batang", serif'
-        : '"Noto Sans KR", "Malgun Gothic", "맑은 고딕", sans-serif';
+      const fontKey = els.selFontFamily.value || 'kopub-dotum';
+      const fontStack = (FONT_CONFIG[fontKey] || FONT_CONFIG['kopub-dotum']).stack;
 
       // 입력값 읽기
       const productName = els.inpProductName.value.trim();
@@ -697,12 +998,14 @@
       const dateHeader = els.selDateHeader.value;
       const showBottlingDate = els.chkShowBottlingDate.checked;
       const bottlingDate = els.inpBottlingDate.value.trim();
+      const hasBottlingCell = showBottlingDate && bottlingDate.length > 0;
 
       const manufacturerLines = els.inpManufacturer.value
         .split('\n')
         .map(s => s.trim())
         .filter(Boolean);
 
+      const showAddress = els.chkShowAddress.checked;
       const address = els.inpAddress.value.trim();
       const ingredients = els.inpIngredients.value.trim();
 
@@ -714,24 +1017,27 @@
         .map(s => s.trim())
         .filter(Boolean);
 
-      // 각 행 높이 계산
-      const row1H = 74; // 제품명 | 내용량
-      const row2H = 74; // 식품유형(주종) | 품목보고번호
-      const row3H = 74; // 알코올 | 병입일
-      // 제조자 행: 1줄이면 74, 2줄 이상이면 줄 수에 맞춰 확장 (2줄일 때 원본 이미지처럼 126)
-      const mfgLineCount = Math.max(1, manufacturerLines.length);
-      const row4H = mfgLineCount === 1 ? 74 : (28 + mfgLineCount * 49);
-      const row5H = 74; // 주소
-      const row6H = 74; // 원재료명 및 함량
+      // 상세 문구 글자수 기반 자동 크기 계산
+      const warnInnerMaxW = TABLE_W - 48;
+      const warnFontSize = calculateWarningFontSize(ctx, warningLines, fontStack, warnInnerMaxW);
+      const warnLineH = Math.round(warnFontSize * 1.26);
 
-      // 하단 경고 & 판매금지 박스 영역 높이 계산
+      // 각 행 높이 계산
+      const row1H = 74; // 1행: 제품명 | 내용량
+      const row2H = 74; // 2행: 식품유형(주종) | 품목보고번호
+      const row3H = 74; // 3행: 알코올 | 병입일(선택)
+      const mfgLineCount = Math.max(1, manufacturerLines.length);
+      const row4H = mfgLineCount === 1 ? 74 : (28 + mfgLineCount * 49); // 4행: 제조자
+      const row5H = showAddress ? 74 : 0; // 5행: 주소 (체크 해제 시 0)
+      const row6H = 74; // 6행: 원재료명 및 함량
+
+      // 7행: 하단 경고 & 판매금지 박스 영역 높이 계산
       const showBottomRow = hasWarning || hasUnder19 || hasNotForSale;
       let row7H = 0;
-      const warnLineH = 35;
       const badgeBoxH = 54;
 
       if (showBottomRow) {
-        let h = 18; // 상단 패딩
+        let h = 18; // 상단 여백
         if (hasWarning && warningLines.length > 0) {
           h += warningLines.length * warnLineH + 6;
         }
@@ -747,10 +1053,22 @@
       const TOTAL_W = TABLE_W + pad * 2;
       const TOTAL_H = TABLE_H + pad * 2;
 
-      // 캔버스 실제 픽셀 크기 설정
-      els.canvas.width = TOTAL_W * SCALE;
-      els.canvas.height = TOTAL_H * SCALE;
-      els.badgeResolution.textContent = `${els.canvas.width} × ${els.canvas.height} px`;
+      // 300 DPI 인쇄 해상도 기준 픽셀 계산
+      // 라벨 인쇄 가로 폭(mm) 기준 300 DPI 픽셀 수 = mm / 25.4 * 300 (최소 3.125배 이상 고해상도 보장)
+      let printWidthMm = parseFloat(els.inpPrintWidthMm.value);
+      if (isNaN(printWidthMm) || printWidthMm < 20) printWidthMm = 65;
+      if (printWidthMm > 300) printWidthMm = 300;
+
+      const target300DpiWidth = Math.round((printWidthMm / 25.4) * 300);
+      const SCALE = Math.max(3.125, target300DpiWidth / TOTAL_W);
+
+      els.canvas.width = Math.round(TOTAL_W * SCALE);
+      els.canvas.height = Math.round(TOTAL_H * SCALE);
+
+      const printHeightMm = (printWidthMm * (TOTAL_H / TOTAL_W)).toFixed(1);
+      const widthMmDisplay = Number.isInteger(printWidthMm) ? printWidthMm.toFixed(1) : printWidthMm;
+      els.lblPrintSizeSummary.textContent = `${widthMmDisplay} × ${printHeightMm} mm`;
+      els.lblResolutionDetail.textContent = `출력: ${els.canvas.width} × ${els.canvas.height} px · 인쇄: ${widthMmDisplay} × ${printHeightMm} mm (300 DPI)`;
 
       ctx.save();
       ctx.scale(SCALE, SCALE);
@@ -761,10 +1079,9 @@
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
       } else if (bgMode === 'semiwhite') {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
         ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
       } else if (bgMode === 'prism') {
-        // 업로드된 사진과 유사한 은은한 홀로그램 프리즘 배경
         ctx.fillStyle = '#fdfcfb';
         ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
 
@@ -777,7 +1094,7 @@
         ctx.fillStyle = grad1;
         ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
       } else {
-        // transparent
+        // 투명 배경 (누끼)
         ctx.clearRect(0, 0, TOTAL_W, TOTAL_H);
       }
 
@@ -789,19 +1106,9 @@
       ctx.fillStyle = inkColor;
       ctx.lineWidth = 2.0;
 
-      // 1. 외곽 테두리 그리기
+      // 외곽 테두리 그리기
       ctx.strokeRect(0, 0, TABLE_W, TABLE_H);
 
-      // 각 행의 Y 시작 좌표 계산
-      const y1 = 0;
-      const y2 = y1 + row1H;
-      const y3 = y2 + row2H;
-      const y4 = y3 + row3H;
-      const y5 = y4 + row4H;
-      const y6 = y5 + row5H;
-      const y7 = y6 + row6H;
-
-      // 가로 구분선 그리기 함수
       function drawHLine(y) {
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -809,28 +1116,21 @@
         ctx.stroke();
       }
 
-      drawHLine(y2);
-      drawHLine(y3);
-      drawHLine(y4);
-      drawHLine(y5);
-      drawHLine(y6);
-      if (showBottomRow) {
-        drawHLine(y7);
-      }
-
       // 기본 폰트 크기 (39px)
       const baseFontSize = 39;
       ctx.font = `400 ${baseFontSize}px ${fontStack}`;
 
       // 칼럼 가이드 좌표 (원본 《해사》 이미지 비율 정밀 매칭)
-      const col1Center = 96;   // 좌측 항목명 중앙 (제품명, 식품유형, 알코올, 제조자, 주소)
-      const col2Left = 212;    // 좌측 값 시작점
+      const col1Center = 96;     // 좌측 항목명 중앙 (제품명, 식품유형, 알코올, 제조자, 주소)
+      const col2Left = 212;      // 좌측 값 시작점
       const col2ShortLeft = 244; // 2글자 짧은 값(해사, 약주) 시작점
-      const col3Center = 545;  // 우측 항목명 중앙 (내용량, 품목보고번호, 병입일)
-      const col4Center = 795;  // 우측 값 중앙 (375ml, 202611215541, 2026.11.19)
+      const col3Center = 545;    // 우측 항목명 중앙 (내용량, 품목보고번호, 병입일)
+      const col4Center = 795;    // 우측 값 중앙 (375ml, 202611215541, 2026.11.19)
 
-      // --- [Row 1] 제품명 | 내용량 ---
-      const r1Mid = y1 + row1H / 2 + 1;
+      let curRowY = 0;
+
+      // --- [1행] 제품명 | 내용량 ---
+      const r1Mid = curRowY + row1H / 2 + 1;
       ctx.font = `400 ${baseFontSize}px ${fontStack}`;
       drawCondensedText(ctx, '제품명', col1Center, r1Mid, 150, 'center', 0.94);
 
@@ -839,9 +1139,11 @@
 
       drawCondensedText(ctx, '내용량', col3Center, r1Mid, 160, 'center', 0.94);
       drawCondensedText(ctx, volume, col4Center, r1Mid, 270, 'center', 0.96);
+      curRowY += row1H;
 
-      // --- [Row 2] 식품유형(주종) | 품목보고번호 ---
-      const r2Mid = y2 + row2H / 2 + 1;
+      // --- [2행] 식품유형(주종) | 품목보고번호 ---
+      drawHLine(curRowY);
+      const r2Mid = curRowY + row2H / 2 + 1;
       const typeHeaderScale = typeHeader.length >= 4 ? 0.85 : 0.94;
       drawCondensedText(ctx, typeHeader, col1Center, r2Mid, 155, 'center', typeHeaderScale);
 
@@ -852,81 +1154,94 @@
         drawCondensedText(ctx, '품목보고번호', col3Center, r2Mid, 210, 'center', 0.84);
         drawCondensedText(ctx, reportNo, col4Center, r2Mid, 280, 'center', 0.78);
       }
+      curRowY += row2H;
 
-      // --- [Row 3] 알코올 | 병입일 ---
-      const r3Mid = y3 + row3H / 2 + 1;
+      // --- [3행] 알코올 | 병입일 (병입일이 없거나 미표시 시 알코올 값이 3칸 병합) ---
+      drawHLine(curRowY);
+      const r3Mid = curRowY + row3H / 2 + 1;
       drawCondensedText(ctx, '알코올', col1Center, r3Mid, 150, 'center', 0.94);
-      drawCondensedText(ctx, alcohol, col2Left + 10, r3Mid, 240, 'left', 0.96);
 
-      if (showBottlingDate && bottlingDate) {
+      if (hasBottlingCell) {
+        drawCondensedText(ctx, alcohol, col2Left + 10, r3Mid, 240, 'left', 0.96);
         const dateHeaderScale = dateHeader.length >= 4 ? 0.85 : 0.94;
         drawCondensedText(ctx, dateHeader, col3Center, r3Mid, 195, 'center', dateHeaderScale);
         drawCondensedText(ctx, bottlingDate, col4Center, r3Mid, 275, 'center', 0.88);
+      } else {
+        // 병입일이 비어있거나 체크 해제된 경우 우측 3칸 영역 전체 활용
+        drawCondensedText(ctx, alcohol, col2Left + 10, r3Mid, TABLE_W - col2Left - 34, 'left', 0.96);
       }
+      curRowY += row3H;
 
-      // --- [Row 4] 제조자 (다중 줄 지원) ---
-      const r4FirstLineY = mfgLineCount === 1 ? (y4 + row4H / 2 + 1) : (y4 + 41);
+      // --- [4행] 제조자 (다중 줄 및 자동 장평 조절 지원) ---
+      drawHLine(curRowY);
+      const r4FirstLineY = mfgLineCount === 1 ? (curRowY + row4H / 2 + 1) : (curRowY + 41);
       ctx.font = `400 ${baseFontSize}px ${fontStack}`;
       drawCondensedText(ctx, '제조자', col1Center, r4FirstLineY, 150, 'center', 0.94);
 
       manufacturerLines.forEach((line, idx) => {
-        const lineY = mfgLineCount === 1 ? r4FirstLineY : (y4 + 41 + idx * 49);
+        const lineY = mfgLineCount === 1 ? r4FirstLineY : (curRowY + 41 + idx * 49);
         if (idx === 0) {
           ctx.font = `400 ${baseFontSize}px ${fontStack}`;
           drawCondensedText(ctx, line, col2Left, lineY, TABLE_W - col2Left - 24, 'left', 0.93);
         } else {
-          // 2번째 줄(조원 명단 등)은 원본 이미지처럼 약간 작은 크기와 장평으로 한 줄에 쏙 들어오게 처리
           ctx.font = `400 36px ${fontStack}`;
           drawCondensedText(ctx, line, col2Left, lineY, TABLE_W - col2Left - 24, 'left', 0.82);
         }
       });
+      curRowY += row4H;
 
-      // --- [Row 5] 주소 ---
-      const r5Mid = y5 + row5H / 2 + 1;
-      ctx.font = `400 ${baseFontSize}px ${fontStack}`;
-      drawCondensedText(ctx, '주 소', col1Center, r5Mid, 150, 'center', 0.94);
-      drawCondensedText(ctx, address, col2Left, r5Mid, TABLE_W - col2Left - 24, 'left', 0.94);
+      // --- [5행] 주소 (표시 체크박스 ON일 때만 렌더링, OFF면 행 전체 생략 후 테두리 자연 연결) ---
+      if (showAddress) {
+        drawHLine(curRowY);
+        const r5Mid = curRowY + row5H / 2 + 1;
+        ctx.font = `400 ${baseFontSize}px ${fontStack}`;
+        drawCondensedText(ctx, '주 소', col1Center, r5Mid, 150, 'center', 0.94);
+        drawCondensedText(ctx, address, col2Left, r5Mid, TABLE_W - col2Left - 24, 'left', 0.94);
+        curRowY += row5H;
+      }
 
-      // --- [Row 6] 원재료명 및 함량 ---
-      const r6Mid = y6 + row6H / 2 + 1;
+      // --- [6행] 원재료명 및 함량 ---
+      drawHLine(curRowY);
+      const r6Mid = curRowY + row6H / 2 + 1;
       ctx.font = `400 ${baseFontSize}px ${fontStack}`;
       drawCondensedText(ctx, '원재료명 및 함량', 24, r6Mid, 285, 'left', 0.85);
       drawCondensedText(ctx, ingredients, 348, r6Mid, TABLE_W - 348 - 22, 'left', 0.90);
+      curRowY += row6H;
 
-      // --- [Row 7] 하단 경고 문구 및 판매금지/비매품 박스 ---
+      // --- [7행] 하단 상세(경고) 문구 및 판매금지/비매품 박스 ---
       if (showBottomRow) {
-        let curY = y7 + 16;
+        drawHLine(curRowY);
+        let bottomY = curRowY + 16;
 
-        // 1) ※ 경고 문구 출력
+        // 1) 상세(경고) 문구 출력 (글자수 맞춤 자동 크기 적용)
         if (hasWarning && warningLines.length > 0) {
-          ctx.font = `400 28px ${fontStack}`;
+          ctx.font = `400 ${warnFontSize}px ${fontStack}`;
           warningLines.forEach((wLine) => {
-            drawCondensedText(ctx, wLine, 24, curY + warnLineH / 2, TABLE_W - 48, 'left', 0.92);
-            curY += warnLineH;
+            drawCondensedText(ctx, wLine, 24, bottomY + warnLineH / 2, warnInnerMaxW, 'left', 0.96);
+            bottomY += warnLineH;
           });
-          curY += 8;
+          bottomY += 8;
         } else {
-          curY += 2;
+          bottomY += 2;
         }
 
         // 2) '19세 미만 청소년에게 판매금지' & 'NOT FOR SALE' 사각 박스 출력
         if (hasUnder19 && hasNotForSale) {
-          // 둘 다 체크된 경우: 원본 이미지와 동일한 좌우 분할 박스 배치
           const leftBoxX = 16;
           const leftBoxW = 574;
           const rightBoxX = 608;
           const rightBoxW = 336;
 
           ctx.lineWidth = 2.0;
-          ctx.strokeRect(leftBoxX, curY, leftBoxW, badgeBoxH);
-          ctx.strokeRect(rightBoxX, curY, rightBoxW, badgeBoxH);
+          ctx.strokeRect(leftBoxX, bottomY, leftBoxW, badgeBoxH);
+          ctx.strokeRect(rightBoxX, bottomY, rightBoxW, badgeBoxH);
 
           ctx.font = `500 39px ${fontStack}`;
           drawCondensedText(
             ctx,
             '19세 미만 청소년에게 판매금지',
             leftBoxX + leftBoxW / 2,
-            curY + badgeBoxH / 2 + 1,
+            bottomY + badgeBoxH / 2 + 1,
             leftBoxW - 18,
             'center',
             0.84
@@ -937,39 +1252,37 @@
             ctx,
             'NOT FOR SALE',
             rightBoxX + rightBoxW / 2,
-            curY + badgeBoxH / 2 + 1,
+            bottomY + badgeBoxH / 2 + 1,
             rightBoxW - 18,
             'center',
             0.94
           );
         } else if (hasUnder19 && !hasNotForSale) {
-          // 19세 미만 판매금지만 체크된 경우
           const boxX = 16;
           const boxW = TABLE_W - 32;
           ctx.lineWidth = 2.0;
-          ctx.strokeRect(boxX, curY, boxW, badgeBoxH);
+          ctx.strokeRect(boxX, bottomY, boxW, badgeBoxH);
           ctx.font = `500 39px ${fontStack}`;
           drawCondensedText(
             ctx,
             '19세 미만 청소년에게 판매금지',
             boxX + boxW / 2,
-            curY + badgeBoxH / 2 + 1,
+            bottomY + badgeBoxH / 2 + 1,
             boxW - 24,
             'center',
             0.92
           );
         } else if (!hasUnder19 && hasNotForSale) {
-          // NOT FOR SALE만 체크된 경우
           const boxX = 16;
           const boxW = TABLE_W - 32;
           ctx.lineWidth = 2.0;
-          ctx.strokeRect(boxX, curY, boxW, badgeBoxH);
+          ctx.strokeRect(boxX, bottomY, boxW, badgeBoxH);
           ctx.font = `500 39px ${fontStack}`;
           drawCondensedText(
             ctx,
             'NOT FOR SALE',
             boxX + boxW / 2,
-            curY + badgeBoxH / 2 + 1,
+            bottomY + badgeBoxH / 2 + 1,
             boxW - 24,
             'center',
             0.96
@@ -980,18 +1293,38 @@
       ctx.restore();
     }
 
-    // PNG 다운로드 기능
-    function downloadPng() {
+    // =========================================================================
+    // 300 DPI PNG Blob 생성 헬퍼 (폰트 로드 대기 + pHYs 300 DPI 메타데이터 삽입)
+    // =========================================================================
+    async function create300DpiPngBlob() {
+      await ensureSelectedFontLoaded();
       renderLabel();
-      const rawName = els.inpProductName.value.trim() || '전통주';
-      const safeName = rawName.replace(/[\\/:*?"<>|]/g, '_');
-      const fileName = `${safeName}_정보표시라벨.png`;
 
-      els.canvas.toBlob((blob) => {
-        if (!blob) {
-          showToast('이미지 생성 중 오류가 발생했습니다.', 'error');
-          return;
-        }
+      return new Promise((resolve, reject) => {
+        els.canvas.toBlob(async (rawBlob) => {
+          if (!rawBlob) {
+            reject(new Error('PNG Blob 생성 실패'));
+            return;
+          }
+          try {
+            const arrayBuf = await rawBlob.arrayBuffer();
+            const dpi300Blob = injectPngDpiMetadata(arrayBuf, 300);
+            resolve(dpi300Blob);
+          } catch (err) {
+            resolve(rawBlob);
+          }
+        }, 'image/png');
+      });
+    }
+
+    // 300 DPI PNG 다운로드 기능
+    async function downloadPng() {
+      try {
+        const blob = await create300DpiPngBlob();
+        const rawName = els.inpProductName.value.trim() || '전통주';
+        const safeName = rawName.replace(/[\\/:*?"<>|]/g, '_');
+        const fileName = `${safeName}_정보표시라벨_300dpi.png`;
+
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -1000,29 +1333,48 @@
         link.click();
         document.body.removeChild(link);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showToast(`'${fileName}' 파일이 다운로드되었습니다!`);
-      }, 'image/png');
+        showToast(`300 DPI 고해상도 '${fileName}' 파일이 다운로드되었습니다!`);
+      } catch (err) {
+        showToast('이미지 생성 중 오류가 발생했습니다.', 'error');
+      }
     }
 
-    // 클립보드에 이미지 복사 기능
+    // 클립보드에 300 DPI 이미지 복사 기능
     async function copyCanvasToClipboard() {
-      renderLabel();
       try {
-        els.canvas.toBlob(async (blob) => {
-          if (!blob) return;
-          if (navigator.clipboard && window.ClipboardItem) {
-            await navigator.clipboard.write([
-              new ClipboardItem({ 'image/png': blob })
-            ]);
-            showToast('클립보드에 PNG 이미지가 복사되었습니다! (Ctrl+V로 바로 붙여넣기 가능)');
-          } else {
-            showToast('이 브라우저에서는 클립보드 직접 복사가 제한됩니다. [.PNG 이미지로 다운로드] 버튼을 이용해 주세요.', 'warn');
-          }
-        }, 'image/png');
+        const blob = await create300DpiPngBlob();
+        if (navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          showToast('클립보드에 300 DPI PNG 이미지가 복사되었습니다! (Ctrl+V로 바로 붙여넣기 가능)');
+        } else {
+          showToast('이 브라우저에서는 클립보드 직접 복사가 제한됩니다. [300 DPI .PNG 이미지로 다운로드] 버튼을 이용해 주세요.', 'warn');
+        }
       } catch (err) {
         showToast('클립보드 복사 권한이 제한되어 있습니다. 다운로드 버튼을 이용해 주세요.', 'warn');
       }
     }
+
+    // 인쇄 가로 폭 슬라이더와 숫자 입력란 양방향 동기화
+    els.rngPrintWidthMm.addEventListener('input', () => {
+      els.inpPrintWidthMm.value = els.rngPrintWidthMm.value;
+      renderLabel();
+    });
+    els.inpPrintWidthMm.addEventListener('input', () => {
+      const val = parseFloat(els.inpPrintWidthMm.value);
+      if (!isNaN(val)) {
+        els.rngPrintWidthMm.value = Math.max(35, Math.min(140, val));
+      }
+      renderLabel();
+    });
+
+    // 서체 변경 시 웹폰트 즉시 로드 후 재렌더링
+    els.selFontFamily.addEventListener('change', async () => {
+      renderLabel();
+      await ensureSelectedFontLoaded();
+      renderLabel();
+    });
 
     // 모든 입력 요소에 실시간 렌더링 이벤트 연결
     const inputElements = [
@@ -1037,14 +1389,16 @@
       els.chkShowBottlingDate,
       els.inpBottlingDate,
       els.inpManufacturer,
+      els.chkShowAddress,
       els.inpAddress,
       els.inpIngredients,
       els.chkWarning,
       els.chkUnder19,
       els.chkNotForSale,
       els.inpWarningText,
+      els.chkAutoWarnSize,
+      els.rngWarnFontScale,
       els.selBgMode,
-      els.selFontFamily,
       els.rngPadding,
       els.inpColor
     ];
@@ -1073,14 +1427,11 @@
       }
     });
 
-    // 폰트 로드 완료 후 재렌더링 보장
-    window.addEventListener('load', () => {
+    // 초기 렌더링 및 웹폰트 로드 완료 후 선명 재렌더링
+    window.addEventListener('load', async () => {
       renderLabel();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => {
-          renderLabel();
-        });
-      }
+      await ensureSelectedFontLoaded();
+      renderLabel();
     });
   </script>
 </body>
