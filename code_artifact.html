@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>주류 후면 정보표시 라벨 생성기 (PNG 출력)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans KR & Noto Serif KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", sans-serif;
+    }
+    /* 투명 배경 확인용 체크보드 패턴 */
+    .checkerboard {
+      background-color: #f8fafc;
+      background-image: 
+        linear-gradient(45deg, #e2e8f0 25%, transparent 25%), 
+        linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #e2e8f0 75%), 
+        linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+    /* 커스텀 스크롤바 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- 상단 헤더 -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+          酒
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+            수제 전통주·가양주 후면 정보표시 생성기
+          </h1>
+          <p class="text-xs text-slate-500 hidden sm:block">
+            항목 입력 및 하단 경고 문구 선택 후 고해상도 .PNG 이미지로 즉시 저장하세요
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btnGithubGuide" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-white hover:bg-slate-700 transition shadow-sm">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span>GitHub 업로드 방법</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨텐츠 영역 -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- 좌측: 정보 입력 폼 (7칼럼) -->
+      <section class="lg:col-span-7 space-y-5">
+
+        <!-- 빠른 프리셋 바 -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-700 flex items-center gap-1.5">
+              <span>⚡ 빠른 예시 불러오기</span>
+            </span>
+            <span class="text-xs text-slate-400">클릭 시 예시 데이터가 즉시 채워집니다</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="applyPreset('haesa')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition">
+              🍶 《해사》 (업로드 이미지 원본)
+            </button>
+            <button type="button" onclick="applyPreset('mangae')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-100 transition">
+              🌺 《만개》 (구기자 이양주)
+            </button>
+            <button type="button" onclick="applyPreset('soju')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 hover:bg-indigo-100 transition">
+              🥃 《오크통 숙성 증류주》
+            </button>
+            <button type="button" onclick="applyPreset('empty')" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition ml-auto">
+              초기화
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. 필수 표시 항목 입력 카드 -->
+        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 text-xs flex items-center justify-center font-bold">1</span>
+              <span>주류 정보표시 항목 입력</span>
+            </h2>
+            <span class="text-xs text-slate-400">빈칸으로 두면 표에서도 공란 처리됩니다</span>
+          </div>
+
+          <!-- 1행: 제품명 / 내용량 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="inpProductName" class="block text-xs font-semibold text-slate-700 mb-1">
+                [제품명]
+              </label>
+              <input id="inpProductName" type="text" value="해사" placeholder="예: 해사"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+            </div>
+            <div>
+              <label for="inpVolume" class="block text-xs font-semibold text-slate-700 mb-1">
+                [내용량]
+              </label>
+              <input id="inpVolume" type="text" value="375ml" placeholder="예: 375ml, 500ml"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+            </div>
+          </div>
+
+          <!-- 2행: 주종(식품유형) / 품목보고번호 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label for="inpLiquorType" class="block text-xs font-semibold text-slate-700">
+                  [주종]
+                </label>
+                <div class="flex items-center gap-1 text-[11px] text-slate-500">
+                  <span>표기명:</span>
+                  <select id="selTypeHeader" class="bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5 text-xs font-medium text-slate-700 outline-none">
+                    <option value="식품유형" selected>식품유형</option>
+                    <option value="주종">주종</option>
+                    <option value="주류의 종류">주류의 종류</option>
+                  </select>
+                </div>
+              </div>
+              <input id="inpLiquorType" type="text" value="약주" placeholder="예: 약주, 탁주, 일반증류주, 과실주"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label for="inpReportNo" class="block text-xs font-semibold text-slate-700">
+                  [품목보고번호]
+                </label>
+                <label class="inline-flex items-center gap-1 text-[11px] text-slate-500 cursor-pointer">
+                  <input id="chkShowReportNo" type="checkbox" checked class="rounded text-amber-600 focus:ring-amber-500" />
+                  <span>항목 표시</span>
+                </label>
+              </div>
+              <input id="inpReportNo" type="text" value="202611215541" placeholder="예: 202611215541"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+            </div>
+          </div>
+
+          <!-- 3행: 알코올 / 병입일 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="inpAlcohol" class="block text-xs font-semibold text-slate-700 mb-1">
+                [알코올]
+              </label>
+              <input id="inpAlcohol" type="text" value="17.3%" placeholder="예: 17.3%"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-1.5">
+                  <label for="inpBottlingDate" class="block text-xs font-semibold text-slate-700">
+                    [병입일]
+                  </label>
+                  <select id="selDateHeader" class="bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5 text-[11px] font-medium text-slate-700 outline-none">
+                    <option value="병입일" selected>병입일</option>
+                    <option value="제조연월일">제조연월일</option>
+                    <option value="병입년월일">병입년월일</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="fillTodayDate()" class="text-[11px] text-amber-700 hover:underline font-medium">
+                    오늘 날짜
+                  </button>
+                  <label class="inline-flex items-center gap-1 text-[11px] text-slate-500 cursor-pointer">
+                    <input id="chkShowBottlingDate" type="checkbox" checked class="rounded text-amber-600 focus:ring-amber-500" />
+                    <span>표시</span>
+                  </label>
+                </div>
+              </div>
+              <input id="inpBottlingDate" type="text" value="2026.11.19" placeholder="예: 2026.11.19 (비워두면 생략 가능)"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+            </div>
+          </div>
+
+          <!-- 4행: 제조자 (줄바꿈 지원) -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="inpManufacturer" class="block text-xs font-semibold text-slate-700">
+                [제조자] <span class="font-normal text-slate-400 ml-1">(엔터로 줄바꿈 시 2번째 줄은 자동으로 폭이 맞춰집니다)</span>
+              </label>
+            </div>
+            <textarea id="inpManufacturer" rows="2" placeholder="예: 한국가양주연구소 정규반 55기 4조&#10;(김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)"
+              class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition resize-y">한국가양주연구소 정규반 55기 4조
+(김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)</textarea>
+          </div>
+
+          <!-- 5행: 주소 -->
+          <div>
+            <label for="inpAddress" class="block text-xs font-semibold text-slate-700 mb-1">
+              [주소]
+            </label>
+            <input id="inpAddress" type="text" value="서울 서초구 방배동 985-2" placeholder="예: 서울 서초구 방배동 985-2"
+              class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+          </div>
+
+          <!-- 6행: 원재료명 및 함량 -->
+          <div>
+            <label for="inpIngredients" class="block text-xs font-semibold text-slate-700 mb-1">
+              [원재료명및함량]
+            </label>
+            <input id="inpIngredients" type="text" value="정제수, 찹쌀, 멥쌀, 누룩(향미주곡)" placeholder="예: 정제수, 찹쌀, 멥쌀, 누룩(향미주곡)"
+              class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+          </div>
+        </div>
+
+        <!-- 2. 하단 경고 문구 및 박스 출력 여부 체크박스 카드 -->
+        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 text-xs flex items-center justify-center font-bold">2</span>
+              <span>하단 경고 문구 및 판매금지 표기 선택</span>
+            </h2>
+            <span class="text-xs text-slate-400">체크 해제 시 해당 요소가 표에서 제외됩니다</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- 체크박스 1: ※ 경고 문장 -->
+            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-amber-50/50 hover:border-amber-300 cursor-pointer transition">
+              <input id="chkWarning" type="checkbox" checked class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+              <div>
+                <div class="text-xs font-bold text-slate-800">'※ 경고 : ' 문장</div>
+                <div class="text-[11px] text-slate-500">과음·임신중 음주 경고문</div>
+              </div>
+            </label>
+
+            <!-- 체크박스 2: 19세 미만 청소년에게 판매금지 -->
+            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-amber-50/50 hover:border-amber-300 cursor-pointer transition">
+              <input id="chkUnder19" type="checkbox" checked class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+              <div>
+                <div class="text-xs font-bold text-slate-800">19세 미만 판매금지</div>
+                <div class="text-[11px] text-slate-500">하단 좌측 사각 박스</div>
+              </div>
+            </label>
+
+            <!-- 체크박스 3: NOT FOR SALE -->
+            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-amber-50/50 hover:border-amber-300 cursor-pointer transition">
+              <input id="chkNotForSale" type="checkbox" checked class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+              <div>
+                <div class="text-xs font-bold text-slate-800">NOT FOR SALE</div>
+                <div class="text-[11px] text-slate-500">하단 우측 비매품 박스</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- 경고 문구 직접 편집 영역 -->
+          <div id="warningTextContainer" class="pt-1">
+            <div class="flex items-center justify-between mb-1">
+              <label for="inpWarningText" class="block text-xs font-semibold text-slate-600">
+                '※ 경고 : ' 상세 문구 편집 <span class="font-normal text-slate-400">(줄바꿈 기준 그대로 출력됩니다)</span>
+              </label>
+              <button type="button" onclick="resetWarningText()" class="text-[11px] text-slate-500 hover:text-amber-700 underline">
+                기본 문구 복원
+              </button>
+            </div>
+            <textarea id="inpWarningText" rows="3"
+              class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs leading-relaxed text-slate-700 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition">※ 경고 : 지나친 음주는 간경화나 간암을 일으키며 운전이나
+작업중 사고 발생률을 높입니다. 임신 중 음주는 기형아 출산을
+높입니다. 부정·불량 식품 신고는 국번없이 1339</textarea>
+          </div>
+        </div>
+
+        <!-- 3. 배경 및 스타일 세부 설정 카드 -->
+        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 text-xs flex items-center justify-center font-bold">3</span>
+              <span>PNG 배경 및 표 스타일 설정</span>
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- 배경 모드 -->
+            <div>
+              <label for="selBgMode" class="block text-xs font-semibold text-slate-700 mb-1">
+                PNG 이미지 배경 선택
+              </label>
+              <select id="selBgMode" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-amber-500 outline-none">
+                <option value="transparent" selected>투명 배경 (다른 라벨 위에 얹기 최적)</option>
+                <option value="white">흰색 단색 배경 (일반 스티커 인쇄용)</option>
+                <option value="semiwhite">반투명 흰색 배경 (배경 그림 위 가독성 확보)</option>
+                <option value="prism">홀로그램 프리즘 배경 (예시 이미지 스타일)</option>
+              </select>
+            </div>
+
+            <!-- 서체 선택 -->
+            <div>
+              <label for="selFontFamily" class="block text-xs font-semibold text-slate-700 mb-1">
+                글꼴(서체) 스타일
+              </label>
+              <select id="selFontFamily" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-amber-500 outline-none">
+                <option value="sans" selected>고딕체 (본고딕 / 원본 이미지와 동일)</option>
+                <option value="serif">명조체 (전통 한지 라벨 감성)</option>
+              </select>
+            </div>
+
+            <!-- 바깥 여백 설정 -->
+            <div>
+              <label for="rngPadding" class="block text-xs font-semibold text-slate-700 mb-1 flex justify-between">
+                <span>표 바깥 여백 (Padding)</span>
+                <span id="lblPaddingVal" class="text-amber-700 font-bold">16px</span>
+              </label>
+              <input id="rngPadding" type="range" min="0" max="80" step="4" value="16" class="w-full accent-amber-600 cursor-pointer" />
+            </div>
+
+            <!-- 글자 및 테두리 색상 -->
+            <div>
+              <label for="inpColor" class="block text-xs font-semibold text-slate-700 mb-1 flex justify-between">
+                <span>표 선 & 글자 색상</span>
+                <span id="lblColorVal" class="text-slate-500 font-mono text-xs">#3A3A3A</span>
+              </label>
+              <div class="flex items-center gap-2">
+                <input id="inpColor" type="color" value="#3a3a3a" class="h-9 w-14 rounded-lg border border-slate-300 cursor-pointer p-0.5 bg-white" />
+                <button type="button" onclick="setInkColor('#3a3a3a')" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100">차콜(원본)</button>
+                <button type="button" onclick="setInkColor('#000000')" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100">완전검정</button>
+                <button type="button" onclick="setInkColor('#ffffff')" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-800 text-white hover:bg-slate-700">흰색(어두운병용)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 우측: 실시간 미리보기 및 PNG 다운로드 패널 (5칼럼, Sticky) -->
+      <aside class="lg:col-span-5 lg:sticky lg:top-22 space-y-4">
+        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">실시간 라벨 미리보기</h2>
+              <p class="text-xs text-slate-500">아래 화면과 100% 동일한 고해상도 PNG로 저장됩니다</p>
+            </div>
+            <span id="badgeResolution" class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              고해상도 인쇄용
+            </span>
+          </div>
+
+          <!-- 캔버스 프리뷰 박스 -->
+          <div id="previewWrapper" class="checkerboard rounded-xl border border-slate-300 p-3 sm:p-4 flex items-center justify-center overflow-hidden min-h-[280px]">
+            <canvas id="labelCanvas" class="w-full h-auto max-w-full shadow-sm rounded"></canvas>
+          </div>
+
+          <!-- 안내 팁 -->
+          <div class="text-xs text-slate-500 bg-slate-50 rounded-xl p-3 border border-slate-200/80 leading-relaxed">
+            💡 <strong>체크무늬 배경 안내:</strong> 체크무늬는 <strong>투명한 영역</strong>을 뜻합니다. 다운로드한 PNG 파일을 미리캔버스, 포토샵, 파워포인트, 한글 등에 불러오면 표 선과 글자만 깔끔하게 올라갑니다.
+          </div>
+
+          <!-- 액션 버튼 모음 -->
+          <div class="space-y-2.5 pt-1">
+            <button id="btnDownloadPng" type="button"
+              class="w-full py-3.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
+              </svg>
+              <span>.PNG 이미지로 다운로드</span>
+            </button>
+
+            <button id="btnCopyClipboard" type="button"
+              class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+              <span>클립보드에 이미지 복사 (Ctrl+V로 바로 붙여넣기)</span>
+            </button>
+          </div>
+
+          <!-- 상태 알림 토스트 메시지 -->
+          <div id="statusToast" class="hidden rounded-xl p-3 text-xs font-semibold text-center transition"></div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- GitHub 업로드 & 배포 가이드 모달 -->
+  <div id="githubModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>🚀 GitHub에 업로드하여 나만의 라벨 웹페이지 만들기</span>
+        </h3>
+        <button id="btnCloseModal" type="button" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
+        <p class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-3.5 text-xs sm:text-sm">
+          이 웹페이지는 별도의 서버나 복잡한 설치 없이 <strong>단 하나의 파일(<code>index.html</code>)</strong>로 모든 기능이 작동하도록 제작되었습니다. 아래 순서대로 GitHub에 올리시면 무료 웹 주소(URL)가 생성되어 스마트폰이나 PC 어디서든 접속해 라벨을 뽑으실 수 있습니다!
+        </p>
+
+        <ol class="space-y-3 list-decimal list-inside font-medium text-slate-800">
+          <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <strong>코드 저장하기:</strong>
+            <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
+              현재 코드 편집기의 내용을 복사하거나 다운로드하여 내 컴퓨터에 <code>index.html</code>이라는 이름으로 저장합니다.
+            </p>
+          </li>
+          <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <strong>GitHub 새 저장소(Repository) 만들기:</strong>
+            <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-amber-700 underline font-semibold">github.com</a>에 로그인한 뒤 우측 상단 <strong>[+] → [New repository]</strong>를 클릭합니다.<br/>
+              • Repository name: 예) <code>sool-label</code> 입력<br/>
+              • <strong>Public</strong> 선택 후 하단 초록색 <strong>[Create repository]</strong> 버튼 클릭!
+            </p>
+          </li>
+          <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <strong><code>index.html</code> 파일 업로드:</strong>
+            <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
+              생성된 화면에서 <strong>"uploading an existing file"</strong> 링크를 클릭하고, 저장해둔 <code>index.html</code> 파일을 마우스로 끌어다 놓은 뒤 하단의 초록색 <strong>[Commit changes]</strong> 버튼을 누릅니다.
+            </p>
+          </li>
+          <li class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <strong>GitHub Pages(무료 웹 호스팅) 켜기:</strong>
+            <p class="font-normal text-xs sm:text-sm text-slate-600 mt-1 ml-5">
+              저장소 상단 메뉴의 <strong>[Settings]</strong> → 좌측 메뉴의 <strong>[Pages]</strong>로 이동합니다.<br/>
+              • <strong>Branch</strong> 항목에서 <code>None</code>을 <code>main</code>으로 바꾸고 <strong>[Save]</strong>를 클릭합니다.<br/>
+              • 약 1분 뒤 페이지 상단에 <code>https://내아이디.github.io/sool-label/</code> 주소가 나타나며, 조원분들과 링크를 공유해 언제든 사용하실 수 있습니다!
+            </p>
+          </li>
+        </ol>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button id="btnCloseModalBottom" type="button" class="px-5 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition">
+          확인했습니다
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 메인 스크립트 -->
+  <script>
+    // 기본 경고 문구 상수
+    const DEFAULT_WARNING_TEXT = `※ 경고 : 지나친 음주는 간경화나 간암을 일으키며 운전이나\n작업중 사고 발생률을 높입니다. 임신 중 음주는 기형아 출산을\n높입니다. 부정·불량 식품 신고는 국번없이 1339`;
+
+    // 프리셋 데이터 모음
+    const PRESETS = {
+      haesa: {
+        productName: '해사',
+        volume: '375ml',
+        typeHeader: '식품유형',
+        liquorType: '약주',
+        showReportNo: true,
+        reportNo: '202611215541',
+        alcohol: '17.3%',
+        dateHeader: '병입일',
+        showBottlingDate: false, // 원본 이미지처럼 비워두거나 체크하면 바로 표시
+        bottlingDate: '2026.11.19',
+        manufacturer: '한국가양주연구소 정규반 55기 4조\n(김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)',
+        address: '서울 서초구 방배동 985-2',
+        ingredients: '정제수, 찹쌀, 멥쌀, 누룩(향미주곡)',
+        chkWarning: true,
+        chkUnder19: true,
+        chkNotForSale: true
+      },
+      mangae: {
+        productName: '만개',
+        volume: '350ml',
+        typeHeader: '식품유형',
+        liquorType: '약주',
+        showReportNo: true,
+        reportNo: '202611215542',
+        alcohol: '20.1%',
+        dateHeader: '병입일',
+        showBottlingDate: true,
+        bottlingDate: '2026.11.19',
+        manufacturer: '한국가양주연구소 정규반 55기 4조\n(김호균, 박민정, 이강혁, 정재윤, 조은아, 조희정)',
+        address: '서울 서초구 방배동 985-2',
+        ingredients: '정제수, 찹쌀, 멥쌀, 구기자, 누룩(향미주곡)',
+        chkWarning: true,
+        chkUnder19: true,
+        chkNotForSale: true
+      },
+      soju: {
+        productName: '고구마 오크 숙성 소주',
+        volume: '375ml',
+        typeHeader: '주종',
+        liquorType: '일반증류주',
+        showReportNo: false,
+        reportNo: '',
+        alcohol: '40.0%',
+        dateHeader: '병입일',
+        showBottlingDate: true,
+        bottlingDate: '2026.11.24',
+        manufacturer: '김호균',
+        address: '서울 서초구 방배동 985-2',
+        ingredients: '정제수, 찹쌀(국내산), 자색고구마, 밤고구마, 전통누룩',
+        chkWarning: true,
+        chkUnder19: true,
+        chkNotForSale: true
+      },
+      empty: {
+        productName: '',
+        volume: '',
+        typeHeader: '식품유형',
+        liquorType: '',
+        showReportNo: true,
+        reportNo: '',
+        alcohol: '',
+        dateHeader: '병입일',
+        showBottlingDate: true,
+        bottlingDate: '',
+        manufacturer: '',
+        address: '',
+        ingredients: '',
+        chkWarning: true,
+        chkUnder19: true,
+        chkNotForSale: true
+      }
+    };
+
+    // DOM 요소 참조
+    const els = {
+      inpProductName: document.getElementById('inpProductName'),
+      inpVolume: document.getElementById('inpVolume'),
+      selTypeHeader: document.getElementById('selTypeHeader'),
+      inpLiquorType: document.getElementById('inpLiquorType'),
+      chkShowReportNo: document.getElementById('chkShowReportNo'),
+      inpReportNo: document.getElementById('inpReportNo'),
+      inpAlcohol: document.getElementById('inpAlcohol'),
+      selDateHeader: document.getElementById('selDateHeader'),
+      chkShowBottlingDate: document.getElementById('chkShowBottlingDate'),
+      inpBottlingDate: document.getElementById('inpBottlingDate'),
+      inpManufacturer: document.getElementById('inpManufacturer'),
+      inpAddress: document.getElementById('inpAddress'),
+      inpIngredients: document.getElementById('inpIngredients'),
+      chkWarning: document.getElementById('chkWarning'),
+      chkUnder19: document.getElementById('chkUnder19'),
+      chkNotForSale: document.getElementById('chkNotForSale'),
+      inpWarningText: document.getElementById('inpWarningText'),
+      warningTextContainer: document.getElementById('warningTextContainer'),
+      selBgMode: document.getElementById('selBgMode'),
+      selFontFamily: document.getElementById('selFontFamily'),
+      rngPadding: document.getElementById('rngPadding'),
+      lblPaddingVal: document.getElementById('lblPaddingVal'),
+      inpColor: document.getElementById('inpColor'),
+      lblColorVal: document.getElementById('lblColorVal'),
+      canvas: document.getElementById('labelCanvas'),
+      btnDownloadPng: document.getElementById('btnDownloadPng'),
+      btnCopyClipboard: document.getElementById('btnCopyClipboard'),
+      badgeResolution: document.getElementById('badgeResolution'),
+      statusToast: document.getElementById('statusToast'),
+      githubModal: document.getElementById('githubModal'),
+      btnGithubGuide: document.getElementById('btnGithubGuide'),
+      btnCloseModal: document.getElementById('btnCloseModal'),
+      btnCloseModalBottom: document.getElementById('btnCloseModalBottom')
+    };
+
+    // 토스트 메시지 표시 함수 (alert 대체)
+    let toastTimer = null;
+    function showToast(message, type = 'success') {
+      els.statusToast.textContent = message;
+      els.statusToast.className = 'rounded-xl p-3 text-xs font-semibold text-center transition block ';
+      if (type === 'success') {
+        els.statusToast.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+      } else {
+        els.statusToast.classList.add('bg-amber-50', 'text-amber-800', 'border', 'border-amber-200');
+      }
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        els.statusToast.classList.add('hidden');
+      }, 3500);
+    }
+
+    // 오늘 날짜 자동 입력
+    function fillTodayDate() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      els.inpBottlingDate.value = `${yyyy}.${mm}.${dd}`;
+      els.chkShowBottlingDate.checked = true;
+      renderLabel();
+    }
+
+    // 기본 경고 문구 복원
+    function resetWarningText() {
+      els.inpWarningText.value = DEFAULT_WARNING_TEXT;
+      renderLabel();
+    }
+
+    // 색상 변경 헬퍼
+    function setInkColor(hex) {
+      els.inpColor.value = hex;
+      els.lblColorVal.textContent = hex.toUpperCase();
+      renderLabel();
+    }
+
+    // 프리셋 적용 함수
+    function applyPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      els.inpProductName.value = p.productName;
+      els.inpVolume.value = p.volume;
+      els.selTypeHeader.value = p.typeHeader;
+      els.inpLiquorType.value = p.liquorType;
+      els.chkShowReportNo.checked = p.showReportNo;
+      els.inpReportNo.value = p.reportNo;
+      els.inpAlcohol.value = p.alcohol;
+      els.selDateHeader.value = p.dateHeader;
+      els.chkShowBottlingDate.checked = p.showBottlingDate;
+      els.inpBottlingDate.value = p.bottlingDate;
+      els.inpManufacturer.value = p.manufacturer;
+      els.inpAddress.value = p.address;
+      els.inpIngredients.value = p.ingredients;
+      els.chkWarning.checked = p.chkWarning;
+      els.chkUnder19.checked = p.chkUnder19;
+      els.chkNotForSale.checked = p.chkNotForSale;
+      renderLabel();
+    }
+
+    /**
+     * 장평(가로 폭 축소)을 자동으로 계산하여 텍스트를 그리는 유틸리티 함수
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {string} text 출력할 문자열
+     * @param {number} x 기준 X 좌표
+     * @param {number} y 기준 Y 좌표 (middle baseline)
+     * @param {number} maxWidth 허용 최대 가로폭
+     * @param {string} align 'left' | 'center' | 'right'
+     * @param {number} defaultScaleX 기본 장평 비율 (예: 0.92)
+     */
+    function drawCondensedText(ctx, text, x, y, maxWidth, align = 'left', defaultScaleX = 0.95) {
+      if (!text) return;
+      ctx.save();
+      const rawWidth = ctx.measureText(text).width;
+      let scaleX = defaultScaleX;
+      if (rawWidth * scaleX > maxWidth && rawWidth > 0) {
+        scaleX = maxWidth / rawWidth;
+      }
+      ctx.translate(x, y);
+      ctx.scale(scaleX, 1);
+      ctx.textAlign = align;
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 0, 0);
+      ctx.restore();
+    }
+
+    /**
+     * 메인 Canvas 렌더링 함수
+     * 업로드된 《해사》 정보표시 이미지의 비율과 타이포그래피를 고해상도로 구현합니다.
+     */
+    function renderLabel() {
+      const ctx = els.canvas.getContext('2d');
+
+      // 경고 문구 입력창 활성/비활성 시각 처리
+      els.warningTextContainer.style.opacity = els.chkWarning.checked ? '1' : '0.45';
+
+      // 고해상도 배율 (2배수 = 가로 약 2000px 급 인쇄 품질)
+      const SCALE = 2;
+      const TABLE_W = 960;
+      const pad = parseInt(els.rngPadding.value, 10) || 0;
+      els.lblPaddingVal.textContent = `${pad}px`;
+
+      const inkColor = els.inpColor.value || '#3a3a3a';
+      els.lblColorVal.textContent = inkColor.toUpperCase();
+
+      const fontStack = els.selFontFamily.value === 'serif'
+        ? '"Noto Serif KR", "Batang", serif'
+        : '"Noto Sans KR", "Malgun Gothic", "맑은 고딕", sans-serif';
+
+      // 입력값 읽기
+      const productName = els.inpProductName.value.trim();
+      const volume = els.inpVolume.value.trim();
+      const typeHeader = els.selTypeHeader.value;
+      const liquorType = els.inpLiquorType.value.trim();
+      const showReportNo = els.chkShowReportNo.checked;
+      const reportNo = els.inpReportNo.value.trim();
+      const alcohol = els.inpAlcohol.value.trim();
+      const dateHeader = els.selDateHeader.value;
+      const showBottlingDate = els.chkShowBottlingDate.checked;
+      const bottlingDate = els.inpBottlingDate.value.trim();
+
+      const manufacturerLines = els.inpManufacturer.value
+        .split('\n')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const address = els.inpAddress.value.trim();
+      const ingredients = els.inpIngredients.value.trim();
+
+      const hasWarning = els.chkWarning.checked;
+      const hasUnder19 = els.chkUnder19.checked;
+      const hasNotForSale = els.chkNotForSale.checked;
+      const warningLines = els.inpWarningText.value
+        .split('\n')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      // 각 행 높이 계산
+      const row1H = 74; // 제품명 | 내용량
+      const row2H = 74; // 식품유형(주종) | 품목보고번호
+      const row3H = 74; // 알코올 | 병입일
+      // 제조자 행: 1줄이면 74, 2줄 이상이면 줄 수에 맞춰 확장 (2줄일 때 원본 이미지처럼 126)
+      const mfgLineCount = Math.max(1, manufacturerLines.length);
+      const row4H = mfgLineCount === 1 ? 74 : (28 + mfgLineCount * 49);
+      const row5H = 74; // 주소
+      const row6H = 74; // 원재료명 및 함량
+
+      // 하단 경고 & 판매금지 박스 영역 높이 계산
+      const showBottomRow = hasWarning || hasUnder19 || hasNotForSale;
+      let row7H = 0;
+      const warnLineH = 35;
+      const badgeBoxH = 54;
+
+      if (showBottomRow) {
+        let h = 18; // 상단 패딩
+        if (hasWarning && warningLines.length > 0) {
+          h += warningLines.length * warnLineH + 6;
+        }
+        if (hasUnder19 || hasNotForSale) {
+          h += badgeBoxH + 14;
+        } else {
+          h += 10;
+        }
+        row7H = h;
+      }
+
+      const TABLE_H = row1H + row2H + row3H + row4H + row5H + row6H + row7H;
+      const TOTAL_W = TABLE_W + pad * 2;
+      const TOTAL_H = TABLE_H + pad * 2;
+
+      // 캔버스 실제 픽셀 크기 설정
+      els.canvas.width = TOTAL_W * SCALE;
+      els.canvas.height = TOTAL_H * SCALE;
+      els.badgeResolution.textContent = `${els.canvas.width} × ${els.canvas.height} px`;
+
+      ctx.save();
+      ctx.scale(SCALE, SCALE);
+
+      // 배경 렌더링
+      const bgMode = els.selBgMode.value;
+      if (bgMode === 'white') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
+      } else if (bgMode === 'semiwhite') {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+        ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
+      } else if (bgMode === 'prism') {
+        // 업로드된 사진과 유사한 은은한 홀로그램 프리즘 배경
+        ctx.fillStyle = '#fdfcfb';
+        ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
+
+        const grad1 = ctx.createLinearGradient(0, 0, TOTAL_W, TOTAL_H);
+        grad1.addColorStop(0, 'rgba(255, 245, 235, 0.7)');
+        grad1.addColorStop(0.35, 'rgba(230, 245, 255, 0.55)');
+        grad1.addColorStop(0.55, 'rgba(255, 230, 250, 0.6)');
+        grad1.addColorStop(0.75, 'rgba(255, 250, 215, 0.55)');
+        grad1.addColorStop(1, 'rgba(235, 230, 255, 0.65)');
+        ctx.fillStyle = grad1;
+        ctx.fillRect(0, 0, TOTAL_W, TOTAL_H);
+      } else {
+        // transparent
+        ctx.clearRect(0, 0, TOTAL_W, TOTAL_H);
+      }
+
+      // 표 시작 원점 이동
+      ctx.translate(pad, pad);
+
+      // 공통 선 및 텍스트 스타일
+      ctx.strokeStyle = inkColor;
+      ctx.fillStyle = inkColor;
+      ctx.lineWidth = 2.0;
+
+      // 1. 외곽 테두리 그리기
+      ctx.strokeRect(0, 0, TABLE_W, TABLE_H);
+
+      // 각 행의 Y 시작 좌표 계산
+      const y1 = 0;
+      const y2 = y1 + row1H;
+      const y3 = y2 + row2H;
+      const y4 = y3 + row3H;
+      const y5 = y4 + row4H;
+      const y6 = y5 + row5H;
+      const y7 = y6 + row6H;
+
+      // 가로 구분선 그리기 함수
+      function drawHLine(y) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(TABLE_W, y);
+        ctx.stroke();
+      }
+
+      drawHLine(y2);
+      drawHLine(y3);
+      drawHLine(y4);
+      drawHLine(y5);
+      drawHLine(y6);
+      if (showBottomRow) {
+        drawHLine(y7);
+      }
+
+      // 기본 폰트 크기 (39px)
+      const baseFontSize = 39;
+      ctx.font = `400 ${baseFontSize}px ${fontStack}`;
+
+      // 칼럼 가이드 좌표 (원본 《해사》 이미지 비율 정밀 매칭)
+      const col1Center = 96;   // 좌측 항목명 중앙 (제품명, 식품유형, 알코올, 제조자, 주소)
+      const col2Left = 212;    // 좌측 값 시작점
+      const col2ShortLeft = 244; // 2글자 짧은 값(해사, 약주) 시작점
+      const col3Center = 545;  // 우측 항목명 중앙 (내용량, 품목보고번호, 병입일)
+      const col4Center = 795;  // 우측 값 중앙 (375ml, 202611215541, 2026.11.19)
+
+      // --- [Row 1] 제품명 | 내용량 ---
+      const r1Mid = y1 + row1H / 2 + 1;
+      ctx.font = `400 ${baseFontSize}px ${fontStack}`;
+      drawCondensedText(ctx, '제품명', col1Center, r1Mid, 150, 'center', 0.94);
+
+      const prodX = (productName.length <= 2) ? col2ShortLeft : col2Left;
+      drawCondensedText(ctx, productName, prodX, r1Mid, 245, 'left', 0.95);
+
+      drawCondensedText(ctx, '내용량', col3Center, r1Mid, 160, 'center', 0.94);
+      drawCondensedText(ctx, volume, col4Center, r1Mid, 270, 'center', 0.96);
+
+      // --- [Row 2] 식품유형(주종) | 품목보고번호 ---
+      const r2Mid = y2 + row2H / 2 + 1;
+      const typeHeaderScale = typeHeader.length >= 4 ? 0.85 : 0.94;
+      drawCondensedText(ctx, typeHeader, col1Center, r2Mid, 155, 'center', typeHeaderScale);
+
+      const typeX = (liquorType.length <= 2) ? col2ShortLeft : col2Left;
+      drawCondensedText(ctx, liquorType, typeX, r2Mid, 245, 'left', 0.95);
+
+      if (showReportNo) {
+        drawCondensedText(ctx, '품목보고번호', col3Center, r2Mid, 210, 'center', 0.84);
+        drawCondensedText(ctx, reportNo, col4Center, r2Mid, 280, 'center', 0.78);
+      }
+
+      // --- [Row 3] 알코올 | 병입일 ---
+      const r3Mid = y3 + row3H / 2 + 1;
+      drawCondensedText(ctx, '알코올', col1Center, r3Mid, 150, 'center', 0.94);
+      drawCondensedText(ctx, alcohol, col2Left + 10, r3Mid, 240, 'left', 0.96);
+
+      if (showBottlingDate && bottlingDate) {
+        const dateHeaderScale = dateHeader.length >= 4 ? 0.85 : 0.94;
+        drawCondensedText(ctx, dateHeader, col3Center, r3Mid, 195, 'center', dateHeaderScale);
+        drawCondensedText(ctx, bottlingDate, col4Center, r3Mid, 275, 'center', 0.88);
+      }
+
+      // --- [Row 4] 제조자 (다중 줄 지원) ---
+      const r4FirstLineY = mfgLineCount === 1 ? (y4 + row4H / 2 + 1) : (y4 + 41);
+      ctx.font = `400 ${baseFontSize}px ${fontStack}`;
+      drawCondensedText(ctx, '제조자', col1Center, r4FirstLineY, 150, 'center', 0.94);
+
+      manufacturerLines.forEach((line, idx) => {
+        const lineY = mfgLineCount === 1 ? r4FirstLineY : (y4 + 41 + idx * 49);
+        if (idx === 0) {
+          ctx.font = `400 ${baseFontSize}px ${fontStack}`;
+          drawCondensedText(ctx, line, col2Left, lineY, TABLE_W - col2Left - 24, 'left', 0.93);
+        } else {
+          // 2번째 줄(조원 명단 등)은 원본 이미지처럼 약간 작은 크기와 장평으로 한 줄에 쏙 들어오게 처리
+          ctx.font = `400 36px ${fontStack}`;
+          drawCondensedText(ctx, line, col2Left, lineY, TABLE_W - col2Left - 24, 'left', 0.82);
+        }
+      });
+
+      // --- [Row 5] 주소 ---
+      const r5Mid = y5 + row5H / 2 + 1;
+      ctx.font = `400 ${baseFontSize}px ${fontStack}`;
+      drawCondensedText(ctx, '주 소', col1Center, r5Mid, 150, 'center', 0.94);
+      drawCondensedText(ctx, address, col2Left, r5Mid, TABLE_W - col2Left - 24, 'left', 0.94);
+
+      // --- [Row 6] 원재료명 및 함량 ---
+      const r6Mid = y6 + row6H / 2 + 1;
+      ctx.font = `400 ${baseFontSize}px ${fontStack}`;
+      drawCondensedText(ctx, '원재료명 및 함량', 24, r6Mid, 285, 'left', 0.85);
+      drawCondensedText(ctx, ingredients, 348, r6Mid, TABLE_W - 348 - 22, 'left', 0.90);
+
+      // --- [Row 7] 하단 경고 문구 및 판매금지/비매품 박스 ---
+      if (showBottomRow) {
+        let curY = y7 + 16;
+
+        // 1) ※ 경고 문구 출력
+        if (hasWarning && warningLines.length > 0) {
+          ctx.font = `400 28px ${fontStack}`;
+          warningLines.forEach((wLine) => {
+            drawCondensedText(ctx, wLine, 24, curY + warnLineH / 2, TABLE_W - 48, 'left', 0.92);
+            curY += warnLineH;
+          });
+          curY += 8;
+        } else {
+          curY += 2;
+        }
+
+        // 2) '19세 미만 청소년에게 판매금지' & 'NOT FOR SALE' 사각 박스 출력
+        if (hasUnder19 && hasNotForSale) {
+          // 둘 다 체크된 경우: 원본 이미지와 동일한 좌우 분할 박스 배치
+          const leftBoxX = 16;
+          const leftBoxW = 574;
+          const rightBoxX = 608;
+          const rightBoxW = 336;
+
+          ctx.lineWidth = 2.0;
+          ctx.strokeRect(leftBoxX, curY, leftBoxW, badgeBoxH);
+          ctx.strokeRect(rightBoxX, curY, rightBoxW, badgeBoxH);
+
+          ctx.font = `500 39px ${fontStack}`;
+          drawCondensedText(
+            ctx,
+            '19세 미만 청소년에게 판매금지',
+            leftBoxX + leftBoxW / 2,
+            curY + badgeBoxH / 2 + 1,
+            leftBoxW - 18,
+            'center',
+            0.84
+          );
+
+          ctx.font = `500 39px ${fontStack}`;
+          drawCondensedText(
+            ctx,
+            'NOT FOR SALE',
+            rightBoxX + rightBoxW / 2,
+            curY + badgeBoxH / 2 + 1,
+            rightBoxW - 18,
+            'center',
+            0.94
+          );
+        } else if (hasUnder19 && !hasNotForSale) {
+          // 19세 미만 판매금지만 체크된 경우
+          const boxX = 16;
+          const boxW = TABLE_W - 32;
+          ctx.lineWidth = 2.0;
+          ctx.strokeRect(boxX, curY, boxW, badgeBoxH);
+          ctx.font = `500 39px ${fontStack}`;
+          drawCondensedText(
+            ctx,
+            '19세 미만 청소년에게 판매금지',
+            boxX + boxW / 2,
+            curY + badgeBoxH / 2 + 1,
+            boxW - 24,
+            'center',
+            0.92
+          );
+        } else if (!hasUnder19 && hasNotForSale) {
+          // NOT FOR SALE만 체크된 경우
+          const boxX = 16;
+          const boxW = TABLE_W - 32;
+          ctx.lineWidth = 2.0;
+          ctx.strokeRect(boxX, curY, boxW, badgeBoxH);
+          ctx.font = `500 39px ${fontStack}`;
+          drawCondensedText(
+            ctx,
+            'NOT FOR SALE',
+            boxX + boxW / 2,
+            curY + badgeBoxH / 2 + 1,
+            boxW - 24,
+            'center',
+            0.96
+          );
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // PNG 다운로드 기능
+    function downloadPng() {
+      renderLabel();
+      const rawName = els.inpProductName.value.trim() || '전통주';
+      const safeName = rawName.replace(/[\\/:*?"<>|]/g, '_');
+      const fileName = `${safeName}_정보표시라벨.png`;
+
+      els.canvas.toBlob((blob) => {
+        if (!blob) {
+          showToast('이미지 생성 중 오류가 발생했습니다.', 'error');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast(`'${fileName}' 파일이 다운로드되었습니다!`);
+      }, 'image/png');
+    }
+
+    // 클립보드에 이미지 복사 기능
+    async function copyCanvasToClipboard() {
+      renderLabel();
+      try {
+        els.canvas.toBlob(async (blob) => {
+          if (!blob) return;
+          if (navigator.clipboard && window.ClipboardItem) {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            showToast('클립보드에 PNG 이미지가 복사되었습니다! (Ctrl+V로 바로 붙여넣기 가능)');
+          } else {
+            showToast('이 브라우저에서는 클립보드 직접 복사가 제한됩니다. [.PNG 이미지로 다운로드] 버튼을 이용해 주세요.', 'warn');
+          }
+        }, 'image/png');
+      } catch (err) {
+        showToast('클립보드 복사 권한이 제한되어 있습니다. 다운로드 버튼을 이용해 주세요.', 'warn');
+      }
+    }
+
+    // 모든 입력 요소에 실시간 렌더링 이벤트 연결
+    const inputElements = [
+      els.inpProductName,
+      els.inpVolume,
+      els.selTypeHeader,
+      els.inpLiquorType,
+      els.chkShowReportNo,
+      els.inpReportNo,
+      els.inpAlcohol,
+      els.selDateHeader,
+      els.chkShowBottlingDate,
+      els.inpBottlingDate,
+      els.inpManufacturer,
+      els.inpAddress,
+      els.inpIngredients,
+      els.chkWarning,
+      els.chkUnder19,
+      els.chkNotForSale,
+      els.inpWarningText,
+      els.selBgMode,
+      els.selFontFamily,
+      els.rngPadding,
+      els.inpColor
+    ];
+
+    inputElements.forEach((el) => {
+      el.addEventListener('input', renderLabel);
+      el.addEventListener('change', renderLabel);
+    });
+
+    els.btnDownloadPng.addEventListener('click', downloadPng);
+    els.btnCopyClipboard.addEventListener('click', copyCanvasToClipboard);
+
+    // 모달 열기/닫기 이벤트
+    els.btnGithubGuide.addEventListener('click', () => {
+      els.githubModal.classList.remove('hidden');
+    });
+    els.btnCloseModal.addEventListener('click', () => {
+      els.githubModal.classList.add('hidden');
+    });
+    els.btnCloseModalBottom.addEventListener('click', () => {
+      els.githubModal.classList.add('hidden');
+    });
+    els.githubModal.addEventListener('click', (e) => {
+      if (e.target === els.githubModal) {
+        els.githubModal.classList.add('hidden');
+      }
+    });
+
+    // 폰트 로드 완료 후 재렌더링 보장
+    window.addEventListener('load', () => {
+      renderLabel();
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          renderLabel();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
